@@ -1,0 +1,86 @@
+name: Check Last Supper tickets
+
+on:
+  workflow_dispatch:
+    inputs:
+      send_test_email:
+        description: Send a test email even when no tickets are found
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Europe/Zurich local time. Off-hour minutes reduce GitHub scheduler congestion.
+    - cron: "7,27,47 7-22 * * *"
+      timezone: "Europe/Zurich"
+    - cron: "13 0-6,23 * * *"
+      timezone: "Europe/Zurich"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: last-supper-ticket-watcher
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Verify browser
+        run: google-chrome --version
+
+      - name: Check official ticket pages
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          TEST_EMAIL: ${{ inputs.send_test_email || 'false' }}
+
+          # Defaults: all Saturdays and Sundays in the next 120 days, two people.
+          LOOKAHEAD_DAYS: "120"
+          WEEKEND_ONLY: "true"
+          MIN_TICKETS: "2"
+          HEADLESS: "true"
+          ALERT_ON_ERROR: "false"
+        run: python watcher.py
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ticket-check-${{ github.run_id }}
+          path: artifacts/
+          retention-days: 7
+
+      - name: Persist notification state
+        if: always()
+        run: |
+          if git diff --quiet -- state.json; then
+            echo "No state change"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          git commit -m "chore: update ticket watcher state"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
