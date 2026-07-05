@@ -80,6 +80,13 @@ def env_bool(name: str, default: bool = False) -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
+def env_text(name: str, default: str = "") -> str:
+    raw = os.getenv(name)
+    if raw is None or not raw.strip():
+        return default
+    return raw.strip()
+
+
 def parse_target_dates() -> list[date]:
     explicit = os.getenv("TARGET_DATES", "").strip()
     if explicit:
@@ -106,11 +113,11 @@ def load_config() -> Config:
         event_urls=event_urls,
         target_dates=parse_target_dates(),
         min_tickets=max(1, int(os.getenv("MIN_TICKETS", "2"))),
-        smtp_host=os.getenv("SMTP_HOST", "smtp.gmail.com"),
-        smtp_port=int(os.getenv("SMTP_PORT", "465")),
-        smtp_username=os.getenv("SMTP_USERNAME", ""),
-        smtp_password=os.getenv("SMTP_PASSWORD", ""),
-        email_from=os.getenv("EMAIL_FROM", os.getenv("SMTP_USERNAME", "")),
+        smtp_host=env_text("SMTP_HOST", "smtp.gmail.com"),
+        smtp_port=int(env_text("SMTP_PORT", "465")),
+        smtp_username=env_text("SMTP_USERNAME"),
+        smtp_password=env_text("SMTP_PASSWORD"),
+        email_from=env_text("EMAIL_FROM", env_text("SMTP_USERNAME")),
         email_to=email_to,
         test_email=env_bool("TEST_EMAIL", False),
         alert_on_error=env_bool("ALERT_ON_ERROR", False),
