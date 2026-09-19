@@ -1,5 +1,42 @@
 {
-  "last_alert_signature": "",
-  "last_checked_at": "2026-09-19T20:58:40+02:00",
-  "last_findings": []
+  "last_alert_signature": "b9063f05945032b6084139866cbcc547341218b5f0d188f2acc9586f5bee8125",
+  "last_checked_at": "2026-09-19T23:27:20+02:00",
+  "last_findings": [
+    {
+      "event_url": "https://cenacolovinciano.vivaticket.it/en/event/cenacolo-vinciano/151991",
+      "target_date": "2026-09-26",
+      "confidence": "medium",
+      "evidence": "JSON/API: an enabled-looking time slot appears near the date; source=https://apigatewayb2cstore.vivaticket.com/api/Home/mx/es-MX/SlideShow"
+    },
+    {
+      "event_url": "https://cenacolovinciano.vivaticket.it/en/event/cenacolo-visite-guidate-a-orario-fisso-in-inglese/238363",
+      "target_date": "2026-09-26",
+      "confidence": "medium",
+      "evidence": "JSON/API: an enabled-looking time slot appears near the date; source=https://apigatewayb2cstore.vivaticket.com/api/Home/mx/es-MX/SlideShow"
+    },
+    {
+      "event_url": "https://cenacolovinciano.vivaticket.it/en/event/cenacolo-vinciano/151991",
+      "target_date": "2026-10-17",
+      "confidence": "medium",
+      "evidence": "JSON/API: an enabled-looking time slot appears near the date; source=https://apigatewayb2cstore.vivaticket.com/api/Home/mx/es-MX/SlideShow"
+    },
+    {
+      "event_url": "https://cenacolovinciano.vivaticket.it/en/event/cenacolo-visite-guidate-a-orario-fisso-in-inglese/238363",
+      "target_date": "2026-10-17",
+      "confidence": "medium",
+      "evidence": "JSON/API: an enabled-looking time slot appears near the date; source=https://apigatewayb2cstore.vivaticket.com/api/Home/mx/es-MX/SlideShow"
+    },
+    {
+      "event_url": "https://cenacolovinciano.vivaticket.it/en/event/cenacolo-vinciano/151991",
+      "target_date": "2026-10-31",
+      "confidence": "medium",
+      "evidence": "JSON/API: an enabled-looking time slot appears near the date; source=https://apigatewayb2cstore.vivaticket.com/api/Home/mx/es-MX/SlideShow"
+    },
+    {
+      "event_url": "https://cenacolovinciano.vivaticket.it/en/event/cenacolo-visite-guidate-a-orario-fisso-in-inglese/238363",
+      "target_date": "2026-10-31",
+      "confidence": "medium",
+      "evidence": "JSON/API: an enabled-looking time slot appears near the date; source=https://apigatewayb2cstore.vivaticket.com/api/Home/mx/es-MX/SlideShow"
+    }
+  ]
 }
